@@ -10,7 +10,7 @@ def CreateDataBase():
 
     # Создание таблиц
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS exercise (
+        CREATE TABLE IF NOT EXISTS exercises (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL
         )
@@ -54,7 +54,7 @@ def AddExercise(name):
     conn = sqlite3.connect('main.db')
     cursor = conn.cursor()
 
-    cursor.execute("INSERT INTO exercise (name) VALUES (?)", (name, ))
+    cursor.execute("INSERT INTO exercises (name) VALUES (?)", (name, ))
 
     # Сохранение изменений
     conn.commit()
@@ -65,8 +65,17 @@ def GetExercise(id):
     conn = sqlite3.connect('main.db')
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM exercise WHERE id = ?", (id,))
+    cursor.execute("SELECT * FROM exercises WHERE id = ?", (id,))
     return cursor.fetchone()
+
+    conn.close()
+
+def GetListExercises():
+    conn = sqlite3.connect('main.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM exercises")
+    return cursor.fetchall()
 
     conn.close()
 
@@ -75,7 +84,7 @@ def DelExercise(id):
     conn = sqlite3.connect('main.db')
     cursor = conn.cursor()
 
-    cursor.execute("DELETE FROM exercise WHERE id = ?", (id,))
+    cursor.execute("DELETE FROM exercises WHERE id = ?", (id,))
 
     conn.commit()
     conn.close()
@@ -85,7 +94,7 @@ def EditExercise(id, name):
     conn = sqlite3.connect('main.db')
     cursor = conn.cursor()
 
-    cursor.execute("UPDATE exercise SET name = ? WHERE id = ?", (name, id))
+    cursor.execute("UPDATE exercises SET name = ? WHERE id = ?", (name, id))
 
     conn.commit()
     conn.close()
@@ -242,4 +251,3 @@ def EditMeal(date, dishes):
     conn.commit()
     conn.close()
 
-CreateDataBase()

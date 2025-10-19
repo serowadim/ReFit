@@ -8,6 +8,8 @@ def MainScreen(now = date.today()):
     os.system('clear')
     print('\n\n\n'+ str(now))
     meal = db.GetMeal(now)
+    workout = db.GetWorkout(now)
+
     if meal:
         meal = meal[2]
         kkal = 0
@@ -22,6 +24,17 @@ def MainScreen(now = date.today()):
     else:
         print('\nКалорий за сегодня: 0')
 
+    if workout:
+        workout = workout[2]
+        for i in range(len(workout)):
+            workout[i][0] = db.GetExercise(workout[i][0])[1]
+
+
+        print('\nТренировка за сегодня\n')
+        for exercise in workout:
+            print(exercise[0], ' '.join(exercise[1:]))
+    else:
+        print('\nТренировки сгодня не было')
 
     print('\n1 Добавить прием пищи       5 Удалить прием пищи\n' \
             '2 Добавть тренировку        6 Удалить тренировку\n' \
@@ -59,6 +72,7 @@ def MainScreen(now = date.today()):
     else:
         print('Я не знаю такой команды')
         MainScreen()
+
 
 def AddMealScreen():
     os.system('clear')
@@ -136,6 +150,7 @@ def DelDishScreen():
     n = input()
     db.DelDish(n)
 
+
 def HistoryScreen():
     os.system('clear')
     print('\nПросмотр истории\n')
@@ -144,5 +159,80 @@ def HistoryScreen():
     MainScreen(now)
 
 
+def AddWorkoutScreen():
+    os.system('clear')
+    now = date.today()
+
+    print('Добавление тренировки\n\n')
+
+    exercises = db.GetListExercises()
+    if exercises:
+        for i in exercises:
+            print(i[0], i[1])
+    else:
+        print('Список упражнений пуст')
+
+    print('\nВведите номер упражнения и через пробел вес, подходы и повторения, закончите надписью "все"\n')
+
+    exercises = []
+    exercise = input()
+    while exercise !='все':
+        exercise = exercise.split()
+        exercise[0] = int(exercise[0])
+        exercises.append(exercise)
+        exercise = input()
+    workout_curr = db.GetWorkout(now)
+    if workout_curr:
+        exercises += workout_curr[2]
+        db.DelWorkout(now)
+    db.AddWorkout(now, exercises)
+
+
+def AddExerciseScreen():
+    os.system('clear')
+    now = date.today()
+    print('Добавление упражнения\n\n')
+
+    exercises = db.GetListExercises()
+    if exercises:
+        for i in exercises:
+            print(i[0], i[1])
+    else:
+        print('Список упражнений пуст')
+
+    print('\nВведите названия упражнений, закончите надписью "все"\n')
+    exercises = []
+    exercise = input()
+    while exercise !='все':
+        exercises.append(exercise)
+        exercise = input()
+
+    for exercise in exercises:
+        db.AddExercise(exercise)
+
+def DelExerciseScreen():
+    os.system('clear')
+    now = date.today()
+    print('\nУдалить упражнение\n')
+
+    exercises = db.GetListExercises()
+    if exercises:
+        for i in exercises:
+            print(i[0], i[1])
+    else:
+        print('Список упражнений пуст')
+
+    print('\nВведите номер упражнения\n')
+    n = input()
+    db.DelExercise(n)
+
+def DelWorkoutScreen():
+    os.system('clear')
+    now = date.today()
+    print('\nУдалить тренировку\n')
+
+    print('Введите дату в формате 2012-12-31\n')
+    n = input()
+    db.DelWorkout(n)
 
 MainScreen(now)
