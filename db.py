@@ -39,6 +39,13 @@ def CreateDataBase():
             dishes TEXT NOT NULL
         )
     ''')
+    AddExercise('Жим лежа')
+    AddExercise('Становая тяга')
+    AddExercise('Приседания со штангой')
+    AddDish('Гречка', 343)
+    AddDish('Рис', 130)
+    AddDish('Куриная грудка (вареная)', 150)
+    conn.commit()
     # Закрытие соединения
     conn.close()
 
@@ -234,3 +241,5 @@ def EditMeal(date, dishes):
 
     conn.commit()
     conn.close()
+
+CreateDataBase()
